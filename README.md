@@ -1,12 +1,14 @@
 # PostgreSQL и Sphinx
 
-Согласно
+Согласно руководств:
 
 * https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-sphinx-on-ubuntu-16-04
 * http://sphinxsearch.com/docs/sphinx3.html
 * https://blog-programmista.ru/post/19-sphinx-ustanovka-i-nastrojka.html
 
-## 
+## Настройка\установка окружения
+
+### Тестовые данные
 
 ```shell
 sudo apt-get install sphinxsearch
@@ -471,6 +473,12 @@ VALUES
 
 ```
 
+### Sphinx
+
+```shell
+sudo apt-get install sphinxsearch
+```
+
 ```shell
 sudo nano /etc/sphinxsearch/sphinx.conf
 ```
@@ -553,20 +561,25 @@ common
 {
 }
 ```
+_На память_:
 
-```
+```shell
 crontab
 @hourly /usr/bin/indexer --rotate --config /etc/sphinxsearch/sphinx.conf --all
  ```
 
-```
+Запуск
+
+```shell
 sudo sed -i 's/START=no/START=yes/g' /etc/default/sphinxsearch
 sudo systemctl restart sphinxsearch.service
 sudo systemctl status sphinxsearch.service
-nano collection
-mysql -h127.0.0.1 -P9306
+```
 
- 
+## Выборка по SphinxQL
+
+```shell
+mysql -h127.0.0.1 -P9306
 ```
 
 ```mysql-sql
@@ -640,7 +653,7 @@ Empty set (0.001 sec)
 
 ```
 
-## API
+## Выборка по SphinxAPI
 
 ```shell
 python2 -m pip install sphinx
@@ -708,3 +721,7 @@ Traceback (most recent call last):
   File "/home/developer/.local/lib/python3.8/site-packages/sphinxsearch/__init__.py", line 75
     SPH_ATTR_MULTI                      = 0X40000000L
 ```
+
+## Вывод
+
+С виду, достойная альтернатива Elastic, но с пакетом на `python3` для SphinxAPI пока не понятно.
