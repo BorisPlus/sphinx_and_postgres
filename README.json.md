@@ -529,3 +529,101 @@ CALL KEYWORDS ('голова мысль идея', 'json_content_idx', 1);
 3 rows in set (0.000 sec)
 
 ```
+
+## Аспект поиска (актуален и для части №1)
+
+Не найдется пока не проиндексируется.
+
+Добавляем в Postgres:
+
+```postgres-sql
+INSERT 
+    INTO json_library.documents(data)
+VALUES
+    ('{"content":"Дройд закоммитил цейтнот"}')
+```
+
+Sphinx не найдет:
+
+```mysql-sql
+SELECT * FROM json_content_idx WHERE MATCH('дройд'); SHOW META;
+Empty set (0.001 sec)
+
++---------------+------------+
+| Variable_name | Value      |
++---------------+------------+
+| total         | 0          |
+| total_found   | 0          |
+| time          | 0.000      |
+| keyword[0]    | дройд      |
+| docs[0]       | 0          |
+| hits[0]       | 0          |
++---------------+------------+
+6 rows in set (0.000 sec)
+
+
+CALL KEYWORDS ('коммит цейтнот', 'json_content_idx', 1);
++------+----------------+----------------+------+------+
+| qpos | tokenized      | normalized     | docs | hits |
++------+----------------+----------------+------+------+
+| 1    | коммит         | комм           | 0    | 0    |
+| 2    | цейтнот        | цейтнот        | 0    | 0    |
++------+----------------+----------------+------+------+
+2 rows in set (0.001 sec)
+```
+
+Индексируем:
+
+```shell
+indexer json_content_idx --rotate
+
+Sphinx 2.2.11-id64-release (95ae9a6)
+Copyright (c) 2001-2016, Andrew Aksyonoff
+Copyright (c) 2008-2016, Sphinx Technologies Inc (http://sphinxsearch.com)
+
+using config file '/etc/sphinxsearch/sphinx.conf'...
+indexing index 'json_content_idx'...
+collected 421 docs, 0.1 MB
+sorted 0.0 Mhits, 100.0% done
+total 421 docs, 57664 bytes
+total 0.254 sec, 226748 bytes/sec, 1655.47 docs/sec
+total 3 reads, 0.000 sec, 20.7 kb/call avg, 0.0 msec/call avg
+total 9 writes, 0.000 sec, 11.2 kb/call avg, 0.0 msec/call avg
+rotating indices: successfully sent SIGHUP to searchd (pid=15560).
+
+```
+
+Sphinx теперь найдет:
+
+```mysql-sql
+SELECT * FROM json_content_idx WHERE MATCH('дройд'); SHOW META;
++------+
+| id   |
++------+
+|  421 |
++------+
+1 row in set (0.001 sec)
+
++---------------+------------+
+| Variable_name | Value      |
++---------------+------------+
+| total         | 1          |
+| total_found   | 1          |
+| time          | 0.000      |
+| keyword[0]    | дройд      |
+| docs[0]       | 1          |
+| hits[0]       | 1          |
++---------------+------------+
+6 rows in set (0.000 sec)
+
+CALL KEYWORDS ('коммит цейтнот', 'json_content_idx', 1);
+
++------+----------------+----------------+------+------+
+| qpos | tokenized      | normalized     | docs | hits |
++------+----------------+----------------+------+------+
+| 1    | коммит         | комм           | 0    | 0    |
+| 2    | цейтнот        | цейтнот        | 1    | 1    |
++------+----------------+----------------+------+------+
+2 rows in set (0.001 sec)
+
+```
