@@ -6,6 +6,8 @@
 * http://sphinxsearch.com/docs/sphinx3.html
 * https://blog-programmista.ru/post/19-sphinx-ustanovka-i-nastrojka.html
 
+Продолжение работы Sphinx с JSON-данными Postgres [здесь](./README.json.md)
+
 ## Настройка\установка окружения
 
 ### Тестовые данные
@@ -725,7 +727,3 @@ Traceback (most recent call last):
 ## Вывод
 
 С виду, достойная альтернатива Elastic, но с пакетом на `python3` для SphinxAPI пока не понятно.
-
-## Послесловие
-
-Продолжение работы Sphinx с JSON-данными в Postgres [здесь](./README.json.md)
