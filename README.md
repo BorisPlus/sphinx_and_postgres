@@ -1,4 +1,4 @@
-# PostgreSQL и Sphinx
+# Sphinx и PostgreSQL
 
 Согласно руководств:
 
@@ -725,3 +725,7 @@ Traceback (most recent call last):
 ## Вывод
 
 С виду, достойная альтернатива Elastic, но с пакетом на `python3` для SphinxAPI пока не понятно.
+
+## Послесловие
+
+Продолжение работы Sphinx с JSON-данными в Postgres [здесь](./README.json.md)
